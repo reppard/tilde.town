@@ -1,0 +1,95 @@
+<html>
+  <head>
+  <title>TildeVerse Health Check</title>
+    <style type="text/css">
+
+      body {
+        text-align:center;
+        height:100%;
+        font-family: 'Inconsolata', ;
+        background:black;
+        color: orange;
+      }
+
+      a {
+        text-decoration:none;
+        color:white;
+      }
+
+      .web_health, .shell_health {
+        height:50px;
+        width:100px;
+        margin-left:auto;
+        margin-right:auto;
+        text-align:center;
+        color: black;
+      }
+
+      .web_health {
+        border-top-left-radius:50px;
+        border-top-right-radius:50px;
+        border-bottom:2px dashed black;
+      }
+
+      .shell_health {
+        border-bottom-left-radius:50px;
+        border-bottom-right-radius:50px;
+      }
+
+      .nodes{
+        margin-left:auto;
+        margin-right:auto;
+        width:740px;
+      }
+
+      .node a {
+        font-size:11px;
+      }
+
+      .node {
+        text-align:center;
+        border:1px dashed white;
+        width: 125px;
+        margin: 5px;
+        padding: 5px;
+        float:left;
+      }
+
+    </style>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+  </head>
+  <div class="updated">Updated On: </div>
+  <p>This is a simple health check of all the tilde servers outlined at <a href="http://tilde.club/~pfhawkins/othertildes.json">http://tilde.club/~pfhawkins/othertildes.json</a></p>
+  <p>I get the status code from each tilde's homepage and check for port 22 availability.</p>
+  <div class="nodes">
+  </div>
+  <body>
+    <script src="/~reppard/js/tilde_stats.js"></script>
+    <script>
+      var nodes_container = document.getElementsByClassName("nodes")[0];
+      var updated = document.getElementsByClassName("updated")[0];
+
+      updated.innerHTML = updated.innerHTML + stats["updated_on"];
+      delete stats["updated_on"];
+
+      for (var key in stats) {
+        nodes_container.innerHTML = nodes_container.innerHTML + '<div class="node ' + key + '">' + '<a href="http://' + key +'">' + key + '</a>' + '</div>';
+      }
+
+      for (var key in stats) {
+        var node = document.getElementsByClassName(key)[0];
+        node.innerHTML = node.innerHTML + getStats(stats[key]) ;
+      }
+
+      function getStats(stats) {
+        var web   = stats['homepage_up'] ? "green" : "red";
+        var login = stats['login_up'] ? "green" : "red";
+
+        var web_div = '<div style="background:' + web + '" class="web_health">web</div>'
+        var login_div = '<div style="background:' + login + '" class="shell_health">shell</div>'
+        return '<div class="health">' + web_div + login_div + '</div>';
+      }
+    </script>
+  </body>
+</html>
